@@ -6,25 +6,23 @@
   <title>Vape & Kalyan Lounge | Katalog</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDK (Compatibility rejimida - eng barqaror va tez ishlaydi) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
-    .neon-border:hover {
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-    }
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .animate-pulse-slow {
-      animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
+    .neon-border:hover { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+    @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .animate-pulse-slow { animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
   </style>
 </head>
 <body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col font-sans selection:bg-purple-600 selection:text-white">
 
-  <!-- Internet holati paneli -->
+  <!-- Internet va yuklanish bildirishnomasi -->
   <div id="connectionStatus" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform -translate-y-full flex items-center justify-center gap-2 py-2 px-4 text-xs font-semibold shadow-lg">
     <span id="statusSpinner" class="inline-block animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full"></span>
-    <span id="statusText">Yuklanmoqda, iltimos kuting...</span>
+    <span id="statusText">Yuklanmoqda...</span>
   </div>
 
   <!-- Yuqori qism (Header) -->
@@ -36,7 +34,7 @@
         </div>
         <div>
           <h1 class="text-lg font-black tracking-wider uppercase text-white">Vape & Kalyan</h1>
-          <p class="text-[11px] text-neutral-400">Offline xotira & Tez buyurtma</p>
+          <p class="text-[11px] text-neutral-400">Bulutli baza & Real vaqt katalogi</p>
         </div>
       </div>
 
@@ -52,7 +50,7 @@
     <div class="bg-gradient-to-r from-neutral-900 via-neutral-900/90 to-purple-950/40 border border-neutral-800 rounded-3xl p-6 text-center sm:text-left relative overflow-hidden">
       <div class="relative z-10 max-w-xl">
         <span class="inline-block px-3 py-1 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-2">Rasmiy Katalog</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">Vape, Pod va Kalyan mahsulotlari</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">Eng sara vape, kalyan va suyuqliklar</h2>
         <p class="text-neutral-400 text-xs sm:text-sm mt-1.5">Tanlang va bitta bosishda Telegram orqali shaxsiy profilga yozing.</p>
       </div>
     </div>
@@ -72,7 +70,7 @@
     <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
     <div id="noProducts" class="hidden text-center py-16 text-neutral-500">
       <i class="fas fa-box-open text-4xl mb-3"></i>
-      <p>Bu toifada hali mahsulotlar mavjud emas.</p>
+      <p>Hozircha bu toifada mahsulot mavjud emas.</p>
     </div>
   </main>
 
@@ -88,20 +86,22 @@
         <i class="fas fa-times text-lg"></i>
       </button>
 
+      <!-- Kirish formasi -->
       <div id="adminLoginBlock">
         <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
           <i class="fas fa-lock text-purple-500"></i> Admin Panel
         </h3>
-        <p class="text-xs text-neutral-400 mb-4">Mahsulotlarni tahrirlash uchun parolni kiriting (Standart: <code>admin123</code>)</p>
+        <p class="text-xs text-neutral-400 mb-4">Mahsulotlarni boshqarish uchun parolni kiriting (Standart: <code>admin123</code>)</p>
         <form onsubmit="handleAdminLogin(event)" class="space-y-4">
           <input type="password" id="adminPass" placeholder="Parol" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
           <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-xl transition text-sm">Kirish</button>
         </form>
       </div>
 
+      <!-- Mahsulot qo'shish va o'chirish -->
       <div id="adminDashboard" class="hidden">
         <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4">
-          <h3 class="text-lg font-bold text-white">Yangi mahsulot</h3>
+          <h3 class="text-lg font-bold text-white">Yangi mahsulot qo‘shish</h3>
           <button onclick="adminLogout()" class="text-xs text-red-400 hover:underline">Chiqish</button>
         </div>
 
@@ -133,24 +133,44 @@
             <label class="block text-xs text-neutral-400 mb-1">Rasm havolasi (URL)</label>
             <input type="url" id="pImage" placeholder="https://..." required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
           </div>
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-            <i class="fas fa-plus"></i> Saqlash
+          <button type="submit" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+            <i class="fas fa-plus"></i> Bulutli bazaga saqlash
           </button>
         </form>
 
-        <h4 class="text-sm font-bold text-neutral-300 mt-6 mb-3">Mavjud tovarlar</h4>
+        <h4 class="text-sm font-bold text-neutral-300 mt-6 mb-3">Mavjud tovarlar ro‘yxati</h4>
         <div id="adminItemsList" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const TELEGRAM_USERNAME = "apple_guliston";
-    const ADMIN_PASSWORD = "admin123";
-    const STORAGE_KEY = "vape_lounge_db_v1";
+    // ==========================================
+    // 1. SOZLAMALAR
+    // ==========================================
+    const TELEGRAM_USERNAME = "apple_guliston"; // Telegram profilingiz
+    const ADMIN_PASSWORD = "admin123";          // Admin panel paroli
+
+    // SIZNING FIREBASE SOZLAMALARINGIZ TO'LIQ ULANGAN:
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGke4Q8HIyEKLk29q1ul0r69rOiorskH4",
+      authDomain: "elektron-vape.firebaseapp.com",
+      databaseURL: "https://elektron-vape-default-rtdb.firebaseio.com",
+      projectId: "elektron-vape",
+      storageBucket: "elektron-vape.firebasestorage.app",
+      messagingSenderId: "874627796437",
+      appId: "1:874627796437:web:a8bbeabd4f7dde3571c15c",
+      measurementId: "G-2CJ06S9MWL"
+    };
+
+    // Firebase initsializatsiyasi
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const productsRef = db.ref('products');
 
     document.getElementById('headerTgBtn').href = `https://t.me/${TELEGRAM_USERNAME}`;
 
+    // Holat bildirishnomasi
     const statusBar = document.getElementById('connectionStatus');
     const statusText = document.getElementById('statusText');
     const statusSpinner = document.getElementById('statusSpinner');
@@ -165,43 +185,52 @@
     }
 
     window.addEventListener('offline', () => {
-      showStatus("⚠️ Internet uzildi. Sayt ichki xotira (offline) rejimida ishlamoqda!", "bg-amber-600 text-white", false, false);
+      showStatus("⚠️ Internet uzildi. Baza bilan aloqa yo'q!", "bg-amber-600 text-white", false, false);
     });
 
     window.addEventListener('online', () => {
       showStatus("✅ Internet aloqasi tiklandi!", "bg-emerald-600 text-white", false, true);
     });
 
-    if (navigator.connection && (navigator.connection.effectiveType === '2g' || navigator.connection.saveData)) {
-      showStatus("Yuklanmoqda... Internet aloqasi sekin, biroz kuting.", "bg-purple-900 text-purple-200 border-b border-purple-500", true, true);
-    }
-
-    const initialProducts = [
-      { id: 1, name: "Vaporesso XROS 4", category: "Pod", specs: "1000 mAh • 3ml kartrij • Type-C", price: "360 000 so'm", image: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&auto=format&fit=crop&q=60" },
-      { id: 2, name: "Lost Mary BM5000", category: "Bir martalik", specs: "5000 ta tortish • Strawberry Ice • 5%", price: "120 000 so'm", image: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=500&auto=format&fit=crop&q=60" },
-      { id: 3, name: "Chabacco Hookah Mix", category: "Kalyan", specs: "Choy bargli tamakisiz aralashma • Mango 50g", price: "45 000 so'm", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=500&auto=format&fit=crop&q=60" },
-      { id: 4, name: "Husky Salt 30ml", category: "Suyuqlik", specs: "Muzli ta'mlar • Tuzli nikotin 20mg", price: "85 000 so'm", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60" }
-    ];
-
-    function loadProducts() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
-        return initialProducts;
-      }
-      try { return JSON.parse(stored); } catch (e) { return initialProducts; }
-    }
-
-    let products = loadProducts();
+    // ==========================================
+    // 2. REALTIME DATABASE'DAN OLISH VA TINGLASH
+    // ==========================================
+    let products = [];
     let currentCategory = "All";
 
+    showStatus("Mahsulotlar yuklanmoqda...", "bg-neutral-900 border-b border-purple-500 text-purple-300", true, false);
+
+    // Bazadan real vaqtda o'qish
+    productsRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      products = [];
+      if (data) {
+        Object.keys(data).forEach(key => {
+          products.push({ id: key, ...data[key] });
+        });
+        products.reverse(); // Yangilari birinchi bo'lib chiqadi
+      }
+      statusBar.classList.add('-translate-y-full');
+      renderProducts();
+      renderAdminItems();
+    }, (error) => {
+      showStatus("Baza bilan xatolik: " + error.message, "bg-red-600 text-white", false, false);
+    });
+
+    // ==========================================
+    // 3. MAHSULOTLARNI CHIQARISH
+    // ==========================================
     function renderProducts() {
       const grid = document.getElementById('productsGrid');
       const noProd = document.getElementById('noProducts');
       grid.innerHTML = "";
 
       const filtered = currentCategory === "All" ? products : products.filter(p => p.category === currentCategory);
-      if (filtered.length === 0) { noProd.classList.remove('hidden'); } else { noProd.classList.add('hidden'); }
+      if (filtered.length === 0) {
+        noProd.classList.remove('hidden');
+      } else {
+        noProd.classList.add('hidden');
+      }
 
       filtered.forEach(p => {
         const tgMessage = `Assalomu alaykum! Saytdan ko'rdim, shu mahsulotni olmoqchiman:\n\n💨 Mahsulot: ${p.name}\n🏷 Kategoriya: ${p.category}\n⚙️ Tavsif: ${p.specs}\n💰 Narxi: ${p.price}`;
@@ -243,6 +272,9 @@
       renderProducts();
     }
 
+    // ==========================================
+    // 4. ADMIN PANEL
+    // ==========================================
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
       document.getElementById('adminModal').classList.add('flex');
@@ -273,29 +305,40 @@
 
     function saveNewProduct(e) {
       e.preventDefault();
-      const newP = {
-        id: Date.now(),
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerText = "Saqlanmoqda...";
+
+      const newProduct = {
         name: document.getElementById('pName').value.trim(),
         category: document.getElementById('pCategory').value,
         price: document.getElementById('pPrice').value.trim(),
         specs: document.getElementById('pSpecs').value.trim(),
-        image: document.getElementById('pImage').value.trim()
+        image: document.getElementById('pImage').value.trim(),
+        createdAt: Date.now()
       };
-      products.unshift(newP);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-      document.getElementById('addProductForm').reset();
-      renderProducts();
-      renderAdminItems();
-      showStatus("✅ Yangi mahsulot saqlandi!", "bg-emerald-600 text-white", false, true);
+
+      productsRef.push(newProduct)
+        .then(() => {
+          document.getElementById('addProductForm').reset();
+          showStatus("✅ Yangi mahsulot bazaga qo'shildi!", "bg-emerald-600 text-white", false, true);
+        })
+        .catch(err => {
+          alert("Xatolik: " + err.message);
+        })
+        .finally(() => {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = `<i class="fas fa-plus"></i> Bulutli bazaga saqlash`;
+        });
     }
 
     function deleteProduct(id) {
       if(confirm("Ushbu mahsulotni o'chirmoqchimisiz?")) {
-        products = products.filter(p => p.id !== id);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-        renderProducts();
-        renderAdminItems();
-        showStatus("Mahsulot o'chirildi", "bg-neutral-800 text-neutral-300", false, true);
+        productsRef.child(id).remove()
+          .then(() => {
+            showStatus("Mahsulot o'chirildi", "bg-neutral-800 text-neutral-300", false, true);
+          })
+          .catch(err => alert("O'chirishda xatolik: " + err.message));
       }
     }
 
@@ -309,13 +352,11 @@
               <p class="font-bold text-white truncate">${p.name}</p>
               <p class="text-neutral-400 text-[10px]">${p.price} • ${p.category}</p>
             </div>
-            <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-300 p-1"><i class="fas fa-trash"></i></button>
+            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300 p-1"><i class="fas fa-trash"></i></button>
           </div>
         `;
       });
     }
-
-    renderProducts();
   </script>
 </body>
 </html>
