@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vape & Kalyan Lounge | Katalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .neon-border:hover {
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    }
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col font-sans selection:bg-purple-600 selection:text-white">
+
+  <!-- Internet holati paneli -->
+  <div id="connectionStatus" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform -translate-y-full flex items-center justify-center gap-2 py-2 px-4 text-xs font-semibold shadow-lg">
+    <span id="statusSpinner" class="inline-block animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full"></span>
+    <span id="statusText">Yuklanmoqda, iltimos kuting...</span>
+  </div>
+
+  <!-- Yuqori qism (Header) -->
+  <header class="bg-neutral-900/80 backdrop-blur-md border-b border-neutral-800 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-xl shadow-lg shadow-purple-500/20">
+          💨
+        </div>
+        <div>
+          <h1 class="text-lg font-black tracking-wider uppercase text-white">Vape & Kalyan</h1>
+          <p class="text-[11px] text-neutral-400">Offline xotira & Tez buyurtma</p>
+        </div>
+      </div>
+
+      <a id="headerTgBtn" href="#" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition duration-200 shadow-md shadow-purple-600/20">
+        <i class="fab fa-telegram text-base"></i>
+        <span>Telegram aloqa</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="max-w-6xl mx-auto px-4 pt-6 pb-2 w-full">
+    <div class="bg-gradient-to-r from-neutral-900 via-neutral-900/90 to-purple-950/40 border border-neutral-800 rounded-3xl p-6 text-center sm:text-left relative overflow-hidden">
+      <div class="relative z-10 max-w-xl">
+        <span class="inline-block px-3 py-1 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-2">Rasmiy Katalog</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">Vape, Pod va Kalyan mahsulotlari</h2>
+        <p class="text-neutral-400 text-xs sm:text-sm mt-1.5">Tanlang va bitta bosishda Telegram orqali shaxsiy profilga yozing.</p>
+      </div>
+    </div>
+
+    <!-- Kategoriyalar filtri -->
+    <div class="flex items-center gap-2 overflow-x-auto py-5 text-sm" id="categoriesBar">
+      <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 rounded-xl font-medium transition bg-purple-600 text-white" data-cat="All">Barchasi</button>
+      <button onclick="filterCategory('Pod')" class="cat-btn px-4 py-2 rounded-xl font-medium transition bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800" data-cat="Pod">Pod tizimlar</button>
+      <button onclick="filterCategory('Bir martalik')" class="cat-btn px-4 py-2 rounded-xl font-medium transition bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800" data-cat="Bir martalik">Bir martalik (Puff)</button>
+      <button onclick="filterCategory('Suyuqlik')" class="cat-btn px-4 py-2 rounded-xl font-medium transition bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800" data-cat="Suyuqlik">Suyuqliklar</button>
+      <button onclick="filterCategory('Kalyan')" class="cat-btn px-4 py-2 rounded-xl font-medium transition bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800" data-cat="Kalyan">Kalyan & Aksessuar</button>
+    </div>
+  </section>
+
+  <!-- Mahsulotlar to'ri -->
+  <main class="max-w-6xl mx-auto px-4 pb-20 w-full flex-1">
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    <div id="noProducts" class="hidden text-center py-16 text-neutral-500">
+      <i class="fas fa-box-open text-4xl mb-3"></i>
+      <p>Bu toifada hali mahsulotlar mavjud emas.</p>
+    </div>
+  </main>
+
+  <!-- Admin Panel Tugmasi -->
+  <button onclick="openAdminModal()" title="Admin panel" class="fixed bottom-5 right-5 w-12 h-12 bg-neutral-800/90 hover:bg-neutral-700 text-neutral-300 rounded-full flex items-center justify-center shadow-xl border border-neutral-700 transition z-40">
+    <i class="fas fa-cog text-lg"></i>
+  </button>
+
+  <!-- Admin Modal -->
+  <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-white">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+
+      <div id="adminLoginBlock">
+        <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fas fa-lock text-purple-500"></i> Admin Panel
+        </h3>
+        <p class="text-xs text-neutral-400 mb-4">Mahsulotlarni tahrirlash uchun parolni kiriting (Standart: <code>admin123</code>)</p>
+        <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+          <input type="password" id="adminPass" placeholder="Parol" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
+          <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-xl transition text-sm">Kirish</button>
+        </form>
+      </div>
+
+      <div id="adminDashboard" class="hidden">
+        <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4">
+          <h3 class="text-lg font-bold text-white">Yangi mahsulot</h3>
+          <button onclick="adminLogout()" class="text-xs text-red-400 hover:underline">Chiqish</button>
+        </div>
+
+        <form id="addProductForm" onsubmit="saveNewProduct(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs text-neutral-400 mb-1">Nomi</label>
+            <input type="text" id="pName" placeholder="Masalan: Vaporesso XROS 4" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1">Toifa</label>
+              <select id="pCategory" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                <option value="Pod">Pod tizimlar</option>
+                <option value="Bir martalik">Bir martalik (Puff)</option>
+                <option value="Suyuqlik">Suyuqlik</option>
+                <option value="Kalyan">Kalyan & Aksessuar</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1">Narxi</label>
+              <input type="text" id="pPrice" placeholder="Masalan: 340 000 so'm" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs text-neutral-400 mb-1">Tavsif / Ta'mi</label>
+            <input type="text" id="pSpecs" placeholder="Masalan: 1000mAh, Black" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs text-neutral-400 mb-1">Rasm havolasi (URL)</label>
+            <input type="url" id="pImage" placeholder="https://..." required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+            <i class="fas fa-plus"></i> Saqlash
+          </button>
+        </form>
+
+        <h4 class="text-sm font-bold text-neutral-300 mt-6 mb-3">Mavjud tovarlar</h4>
+        <div id="adminItemsList" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TELEGRAM_USERNAME = "apple_guliston";
+    const ADMIN_PASSWORD = "admin123";
+    const STORAGE_KEY = "vape_lounge_db_v1";
+
+    document.getElementById('headerTgBtn').href = `https://t.me/${TELEGRAM_USERNAME}`;
+
+    const statusBar = document.getElementById('connectionStatus');
+    const statusText = document.getElementById('statusText');
+    const statusSpinner = document.getElementById('statusSpinner');
+
+    function showStatus(text, bgClass, showSpinner = false, autoHide = true) {
+      statusBar.className = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform translate-y-0 flex items-center justify-center gap-2 py-2 px-4 text-xs font-semibold shadow-lg ${bgClass}`;
+      statusText.innerText = text;
+      statusSpinner.style.display = showSpinner ? 'inline-block' : 'none';
+      if (autoHide) {
+        setTimeout(() => { statusBar.classList.add('-translate-y-full'); }, 3000);
+      }
+    }
+
+    window.addEventListener('offline', () => {
+      showStatus("⚠️ Internet uzildi. Sayt ichki xotira (offline) rejimida ishlamoqda!", "bg-amber-600 text-white", false, false);
+    });
+
+    window.addEventListener('online', () => {
+      showStatus("✅ Internet aloqasi tiklandi!", "bg-emerald-600 text-white", false, true);
+    });
+
+    if (navigator.connection && (navigator.connection.effectiveType === '2g' || navigator.connection.saveData)) {
+      showStatus("Yuklanmoqda... Internet aloqasi sekin, biroz kuting.", "bg-purple-900 text-purple-200 border-b border-purple-500", true, true);
+    }
+
+    const initialProducts = [
+      { id: 1, name: "Vaporesso XROS 4", category: "Pod", specs: "1000 mAh • 3ml kartrij • Type-C", price: "360 000 so'm", image: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&auto=format&fit=crop&q=60" },
+      { id: 2, name: "Lost Mary BM5000", category: "Bir martalik", specs: "5000 ta tortish • Strawberry Ice • 5%", price: "120 000 so'm", image: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=500&auto=format&fit=crop&q=60" },
+      { id: 3, name: "Chabacco Hookah Mix", category: "Kalyan", specs: "Choy bargli tamakisiz aralashma • Mango 50g", price: "45 000 so'm", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=500&auto=format&fit=crop&q=60" },
+      { id: 4, name: "Husky Salt 30ml", category: "Suyuqlik", specs: "Muzli ta'mlar • Tuzli nikotin 20mg", price: "85 000 so'm", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60" }
+    ];
+
+    function loadProducts() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
+        return initialProducts;
+      }
+      try { return JSON.parse(stored); } catch (e) { return initialProducts; }
+    }
+
+    let products = loadProducts();
+    let currentCategory = "All";
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const noProd = document.getElementById('noProducts');
+      grid.innerHTML = "";
+
+      const filtered = currentCategory === "All" ? products : products.filter(p => p.category === currentCategory);
+      if (filtered.length === 0) { noProd.classList.remove('hidden'); } else { noProd.classList.add('hidden'); }
+
+      filtered.forEach(p => {
+        const tgMessage = `Assalomu alaykum! Saytdan ko'rdim, shu mahsulotni olmoqchiman:\n\n💨 Mahsulot: ${p.name}\n🏷 Kategoriya: ${p.category}\n⚙️ Tavsif: ${p.specs}\n💰 Narxi: ${p.price}`;
+        const tgLink = `https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(tgMessage)}`;
+
+        grid.innerHTML += `
+          <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col justify-between transition duration-300 hover:border-purple-500/50 neon-border group">
+            <div>
+              <div class="h-44 bg-neutral-950 overflow-hidden relative flex items-center justify-center">
+                <div class="absolute inset-0 bg-neutral-900 animate-pulse-slow flex items-center justify-center text-neutral-600 text-xs">Yuklanmoqda...</div>
+                <img src="${p.image}" alt="${p.name}" loading="lazy" onload="this.previousElementSibling.style.display='none'" onerror="this.src='https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=500&auto=format&fit=crop&q=60'; this.previousElementSibling.style.display='none';" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 relative z-10">
+                <span class="absolute top-2.5 left-2.5 z-20 bg-black/70 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-md text-purple-300 border border-purple-500/20">${p.category}</span>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-white text-base leading-snug">${p.name}</h3>
+                <p class="text-xs text-neutral-400 mt-1 line-clamp-2">${p.specs}</p>
+                <div class="mt-3"><span class="text-lg font-black text-purple-400">${p.price}</span></div>
+              </div>
+            </div>
+            <div class="p-4 pt-0">
+              <a href="${tgLink}" target="_blank" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-md shadow-purple-600/10">
+                <i class="fab fa-telegram-plane"></i> Buyurtma berish
+              </a>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if(btn.dataset.cat === cat) {
+          btn.className = "cat-btn px-4 py-2 rounded-xl font-medium transition bg-purple-600 text-white";
+        } else {
+          btn.className = "cat-btn px-4 py-2 rounded-xl font-medium transition bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800";
+        }
+      });
+      renderProducts();
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminModal').classList.remove('hidden');
+      document.getElementById('adminModal').classList.add('flex');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+      document.getElementById('adminModal').classList.remove('flex');
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      if (document.getElementById('adminPass').value === ADMIN_PASSWORD) {
+        document.getElementById('adminLoginBlock').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        renderAdminItems();
+      } else {
+        alert("Xato parol kiritildi!");
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('adminDashboard').classList.add('hidden');
+      document.getElementById('adminLoginBlock').classList.remove('hidden');
+      document.getElementById('adminPass').value = "";
+      closeAdminModal();
+    }
+
+    function saveNewProduct(e) {
+      e.preventDefault();
+      const newP = {
+        id: Date.now(),
+        name: document.getElementById('pName').value.trim(),
+        category: document.getElementById('pCategory').value,
+        price: document.getElementById('pPrice').value.trim(),
+        specs: document.getElementById('pSpecs').value.trim(),
+        image: document.getElementById('pImage').value.trim()
+      };
+      products.unshift(newP);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+      document.getElementById('addProductForm').reset();
+      renderProducts();
+      renderAdminItems();
+      showStatus("✅ Yangi mahsulot saqlandi!", "bg-emerald-600 text-white", false, true);
+    }
+
+    function deleteProduct(id) {
+      if(confirm("Ushbu mahsulotni o'chirmoqchimisiz?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+        renderProducts();
+        renderAdminItems();
+        showStatus("Mahsulot o'chirildi", "bg-neutral-800 text-neutral-300", false, true);
+      }
+    }
+
+    function renderAdminItems() {
+      const container = document.getElementById('adminItemsList');
+      container.innerHTML = "";
+      products.forEach(p => {
+        container.innerHTML += `
+          <div class="flex items-center justify-between bg-neutral-950 border border-neutral-800 p-2.5 rounded-xl text-xs">
+            <div class="truncate max-w-[240px]">
+              <p class="font-bold text-white truncate">${p.name}</p>
+              <p class="text-neutral-400 text-[10px]">${p.price} • ${p.category}</p>
+            </div>
+            <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-300 p-1"><i class="fas fa-trash"></i></button>
+          </div>
+        `;
+      });
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
