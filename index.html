@@ -49,12 +49,12 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="openAdminModal()" class="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 transition">
+        <button onclick="openAdminModal()" class="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 transition" title="Admin panel">
           <i class="fas fa-sliders text-sm"></i>
         </button>
-        <a id="headerTgBtn" href="https://t.me/apple_guliston" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-lg shadow-purple-600/20">
+        <a id="headerTgBtn" href="https://t.me/elektron_vape" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-lg shadow-purple-600/20">
           <i class="fab fa-telegram-plane text-sm"></i>
-          <span>Telegram</span>
+          <span>@elektron_vape</span>
         </a>
       </div>
     </div>
@@ -94,10 +94,10 @@
     
     <!-- Skelet Loader -->
     <div id="loaderSkeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-72 animate-pulse"></div>
-      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-72 animate-pulse"></div>
-      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-72 animate-pulse"></div>
-      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-72 animate-pulse"></div>
+      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-80 animate-pulse"></div>
+      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-80 animate-pulse"></div>
+      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-80 animate-pulse"></div>
+      <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl h-80 animate-pulse"></div>
     </div>
 
     <div id="productsGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
@@ -108,7 +108,7 @@
         <i class="fas fa-boxes-stacked"></i>
       </div>
       <h3 class="text-base font-bold text-white">Mahsulot topilmadi</h3>
-      <p class="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">Hozircha ushbu toifada tovar yo'q yoki qidiruv so'rovi bo'yicha hech narsa chiqmadi.</p>
+      <p class="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">Hozircha tovar qo'shilmagan yoki qidiruv so'rovi bo'yicha hech narsa chiqmadi.</p>
     </div>
   </main>
 
@@ -119,7 +119,7 @@
         <i class="fas fa-times"></i>
       </button>
 
-      <!-- Kirish qismi (Email & Parol) -->
+      <!-- Kirish qismi -->
       <div id="adminLoginBlock" class="py-6 text-center max-w-sm mx-auto">
         <div class="w-14 h-14 bg-purple-600/10 text-purple-400 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 border border-purple-500/20">
           <i class="fas fa-shield-halved"></i>
@@ -150,7 +150,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-neutral-400 mb-1.5">Mahsulot nomi</label>
-              <input type="text" id="pName" placeholder="Masalan: Vaporesso XROS 4" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+              <input type="text" id="pName" placeholder="Masalan: Waka soPro 10000" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
             </div>
             <div>
               <label class="block text-xs font-semibold text-neutral-400 mb-1.5">Kategoriya</label>
@@ -166,11 +166,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-neutral-400 mb-1.5">Narxi</label>
-              <input type="text" id="pPrice" placeholder="Masalan: 350 000 so'm" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+              <input type="text" id="pPrice" placeholder="Masalan: 160 000 so'm" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
             </div>
             <div>
               <label class="block text-xs font-semibold text-neutral-400 mb-1.5">Xususiyatlari / Ta'mi</label>
-              <input type="text" id="pSpecs" placeholder="Masalan: 1000 mAh • 3ml • Qora" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+              <input type="text" id="pSpecs" placeholder="Masalan: Watermelon Ice • 10000 puff" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
             </div>
           </div>
 
@@ -186,9 +186,9 @@
               <span class="text-xs text-neutral-500">yoki</span>
               <input type="url" id="pImageUrl" placeholder="Internet havola (URL)..." class="w-full sm:w-1/2 bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
             </div>
-            <div id="imagePreviewContainer" class="hidden mt-3 relative w-20 h-20 rounded-xl overflow-hidden border border-neutral-700">
-              <img id="imagePreview" src="" class="w-full h-full object-cover">
-              <button type="button" onclick="clearSelectedImage()" class="absolute top-1 right-1 bg-black/70 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✕</button>
+            <div id="imagePreviewContainer" class="hidden mt-3 relative w-24 h-24 rounded-2xl overflow-hidden border border-neutral-700 bg-neutral-950 flex items-center justify-center p-1">
+              <img id="imagePreview" src="" class="max-w-full max-h-full object-contain">
+              <button type="button" onclick="clearSelectedImage()" class="absolute top-1 right-1 bg-black/80 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✕</button>
             </div>
           </div>
 
@@ -205,9 +205,9 @@
 
   <script>
     // ==========================================
-    // SOZLAMALAR & FIREBASE BAZASI
+    // SOZLAMALAR: TELEGRAM & FIREBASE BAZASI
     // ==========================================
-    const TELEGRAM_USERNAME = "apple_guliston";
+    const TELEGRAM_USERNAME = "elektron_vape"; // Yangilangan Telegram manzili
 
     const firebaseConfig = {
       apiKey: "AIzaSyDGke4Q8HIyEKLk29q1ul0r69rOiorskH4",
@@ -287,7 +287,7 @@
     });
 
     // ==========================================
-    // KATALOG CHIQARISH
+    // KATALOG CHIQARISH (TO'LIQ RASM CHIQARISH MOSLANGAN)
     // ==========================================
     function renderCatalog() {
       const grid = document.getElementById('productsGrid');
@@ -314,9 +314,10 @@
           grid.innerHTML += `
             <div class="product-card bg-[#14151b] border border-neutral-800/90 rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300">
               <div>
-                <div class="relative h-48 bg-neutral-950 overflow-hidden">
-                  <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='${defaultImg}'" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                  <span class="absolute top-3 left-3 bg-neutral-950/80 backdrop-blur-md border border-neutral-700/60 text-[10px] font-bold uppercase tracking-wider text-purple-300 px-2.5 py-1 rounded-lg">
+                <!-- Rasm to'liq (kesilmasdan) ko'rinadigan konteyner -->
+                <div class="relative h-56 bg-neutral-950 flex items-center justify-center p-3 border-b border-neutral-800/50 overflow-hidden">
+                  <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='${defaultImg}'" class="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-105">
+                  <span class="absolute top-3 left-3 bg-neutral-900/90 backdrop-blur-md border border-neutral-700/60 text-[10px] font-bold uppercase tracking-wider text-purple-300 px-2.5 py-1 rounded-lg">
                     ${p.category}
                   </span>
                 </div>
@@ -372,14 +373,14 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 600;
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = MAX_WIDTH;
+          const MAX_WIDTH = 700;
+          const scaleSize = Math.min(1, MAX_WIDTH / img.width);
+          canvas.width = img.width * scaleSize;
           canvas.height = img.height * scaleSize;
 
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          processedImageData = canvas.toDataURL('image/jpeg', 0.7);
+          processedImageData = canvas.toDataURL('image/jpeg', 0.75);
 
           document.getElementById('imagePreview').src = processedImageData;
           document.getElementById('imagePreviewContainer').classList.remove('hidden');
@@ -459,7 +460,7 @@
         .then(() => {
           document.getElementById('productForm').reset();
           clearSelectedImage();
-          notifyNetwork("✅ Tovar bazaga muvaffaqiyatli saqlandi!", "success");
+          notifyNetwork("✅ Tovar bazaga saqlandi!", "success");
         })
         .catch(err => {
           alert("Xatolik: " + err.message);
@@ -490,7 +491,9 @@
         container.innerHTML += `
           <div class="flex items-center justify-between bg-neutral-950 border border-neutral-800 p-2.5 rounded-xl text-xs">
             <div class="flex items-center gap-2.5 truncate">
-              <img src="${p.image || 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=100'}" class="w-8 h-8 rounded-lg object-cover">
+              <div class="w-10 h-10 bg-neutral-900 rounded-lg flex items-center justify-center p-0.5 overflow-hidden flex-shrink-0">
+                <img src="${p.image || 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=100'}" class="max-w-full max-h-full object-contain">
+              </div>
               <div class="truncate">
                 <p class="font-bold text-white truncate">${p.name}</p>
                 <p class="text-neutral-400 text-[10px]">${p.price} • ${p.category}</p>
